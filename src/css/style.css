@@ -1,0 +1,28 @@
+.centered{
+    position:fixed;
+    top:50%;
+    left:50%;
+
+
+}
+
+.collapsible-header:hover{
+    animation-name: colorChange;
+    animation-duration:0.3s;
+    background-color: rgba(0, 227, 198, 0.28);
+}
+@keyframes colorChange{
+    from {background-color: #ffffff;}
+    to {background-color: rgba(0, 227, 198, 0.28);}
+
+}
+
+body{
+
+    -webkit-user-select: none;
+}
+.collapsible-body{
+
+    background-color: rgba(0, 227, 198, 0.28);
+
+}

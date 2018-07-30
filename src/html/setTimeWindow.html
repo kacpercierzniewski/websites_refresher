@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <title>Set time</title>
+</head>
+<body>
+<div class="container">
+    <form>
+        <div>
+            <label>Type time (in seconds) </label>
+            <input type="number" id="time" autofocus>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit">Set time</button>
+    </form>
+    <div id="error"></div>
+</div>
+<script>
+    const validators = require('../js/validators');
+    const electron= require('electron');
+    const{ipcRenderer} = electron;
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit',submitForm);
+
+    function submitForm(e){
+        e.preventDefault(); // default is saving to file
+        const time = document.querySelector('#time').value;
+        if (validators.isValidNumber(time)){
+            console.log(time);
+            ipcRenderer.send('time:add',time);
+        }
+        else 
+        {
+            document.querySelector('#error').innerHTML = "Wrong time value, please set time above 10 secods." 
+        }
+    }
+
+</script>
+</body>
+</html>

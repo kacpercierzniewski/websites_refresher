@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <title>Set time</title>
+</head>
+<body>
+<div class="container">
+    <form>
+        <div>
+            <br/>
+            Connection error, please check your access to the Internet.
+        </div>
+        <br/>
+        <button class="btn waves-effect waves-light " type="submit">OK</button>
+    </form>
+</div>
+<script>
+    const electron= require('electron');
+    const{ipcRenderer} = electron;
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit',submitForm);
+
+    function submitForm(e){
+        e.preventDefault(); // default is saving to file
+        ipcRenderer.send('error:add');
+        console.log('want to quit');
+    }
+
+</script>
+</body>
+</html>
