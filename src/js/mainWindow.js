@@ -80,11 +80,14 @@ function compareSites(oldSiteItem, newSite) {
       return err;
     }
     if (data.toString() === newSite.toString()) {
+      console.log('sites the same');
+
       if (oldSiteItem.status === 'changed' || oldSiteItem.status === 'error') {
         setDefaultLook(oldSiteItem);
         store.set(`${oldSiteItem.id}.status`, 'unchanged');
       }
     } else if (oldSiteItem.status === 'unchanged' || oldSiteItem.status === 'error') {
+      console.log('different sites');
       store.set(`${oldSiteItem.id}.status`, 'changed');
       showChanges(oldSiteItem);
     }
@@ -98,14 +101,21 @@ function manageWebsiteContent(websiteItem) {
     axios.get(`http://${websiteItem.url}`)
       .then((response) => {
         if (response.status === 200) {
-          store.set(`${websiteItem.id}.newContent`, response.data);
-          compareSites(websiteItem, response.data);
+          if (`${websiteItem.status}` === 'new') {
+            store.set(`${websiteItem.id}.newContent`, response.data);
+            saveWebsiteToHTML(websiteItem);
+            store.set(`${websiteItem.id}.status`, 'unchanged');
+          } else {
+            store.set(`${websiteItem.id}.newContent`, response.data);
+            compareSites(websiteItem, response.data);
+          }
           setTimeout(() => {
             manageWebsiteContent(store.get(`${websiteItem.id}`));
           }, store.get('time') * 1000);
         }
       }, (error) => {
         store.set(`${websiteItem.id}.status`, 'error');
+
         setTimeout(() => {
           manageWebsiteContent(store.get(`${websiteItem.id}`));
         }, store.get('time') * 1000);
@@ -135,7 +145,6 @@ function removeItem() {
 }
 
 function addNewSite(websiteItem) {
-  console.log(websiteItem);
   ul.className = 'collapsible';
   const li = document.createElement('li');
   const div = document.createElement('div');
@@ -201,8 +210,9 @@ ipcRenderer.on('website:add', (e, item) => {
   for (let i = 0; i < store.size; i += 1) {
     if (!store.has(`${i}`)) {
       store.set(`${i}.url`, item);
-      store.set(`${i}.status`, 'unchanged');
+      store.set(`${i}.status`, 'new');
       store.set(`${i}.id`, i);
+      store.set(`${i}.newContent`, '');
       addNewSite(store.get(`${i}`));
       manageWebsiteContent(store.get(`${i}`));
       break;
@@ -213,7 +223,7 @@ ipcRenderer.on('website:add', (e, item) => {
 ipcRenderer.on('item:clear', () => {
   ul.innerHTML = '';
   ul.className = '';
-  store.clear();
+  store.delete();
   store.set('time', time);
 });
 // set time

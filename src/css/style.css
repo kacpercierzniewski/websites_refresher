@@ -23,6 +23,12 @@ body{
 }
 .collapsible-body{
 
-    background-color: rgba(0, 227, 198, 0.28);
+    background-color:  rgba(0, 227, 198, 0.10);
+
+}
+
+.errorBackground{
+
+    background-color:  rgba(227, 0, 0, 0.2);
 
 }

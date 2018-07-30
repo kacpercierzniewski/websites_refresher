@@ -15,27 +15,7 @@
     </form>
     <div id="error"></div>
 </div>
-<script>
-    const validators = require('../js/validators');
-    const electron= require('electron');
-    const{ipcRenderer} = electron;
+<script type='text/javascript' src="../js/setTimeWindow.js"></script>
 
-    const form = document.querySelector('form');
-    form.addEventListener('submit',submitForm);
-
-    function submitForm(e){
-        e.preventDefault(); // default is saving to file
-        const time = document.querySelector('#time').value;
-        if (validators.isValidNumber(time)){
-            console.log(time);
-            ipcRenderer.send('time:add',time);
-        }
-        else 
-        {
-            document.querySelector('#error').innerHTML = "Wrong time value, please set time above 10 secods." 
-        }
-    }
-
-</script>
 </body>
 </html>

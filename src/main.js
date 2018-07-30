@@ -140,9 +140,9 @@ function showMainContent() {
   }));
 }
 
-function makeMenuItemsDisabled(menu) {
-  Object.keys(menu).forEach((key) => {
-    menu[key].enabled = false;
+function makeMenuItemsDisabled() {
+  Object.keys(mainMenuTemplate[0].submenu).forEach((key) => {
+    mainMenuTemplate[0].submenu[key].enabled = false;
   });
 }
 
@@ -154,28 +154,24 @@ function showLoadingContent() {
 
   }));
 }
-// Listen for app to be ready
 
+// Listen for app to be ready
 app.on('ready', () => {
   createMainWindow();
   showLoadingContent();
   dns.lookup('google.com', (err) => {
     if (err) {
       createNoConnectionWindow();
-      makeMenuItemsDisabled(mainMenuTemplate[0].submenu);
-      const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-      Menu.setApplicationMenu(mainMenu);
+      makeMenuItemsDisabled();
     } else {
-      const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-      Menu.setApplicationMenu(mainMenu);
       showMainContent();
     }
+    Menu.setApplicationMenu(Menu.buildFromTemplate(mainMenuTemplate));
   });
 
 
   const appIcon = new Tray(iconpath);
-  // create new window
-  // build menu from template
+
 
   const contextMenu = Menu.buildFromTemplate([
     {

@@ -1,0 +1,7 @@
+node_modules/*
+dist/*
+build/*
+.idea/*
+src/css/*
+src/js/materialize.min.js
+src/html/websites/*
