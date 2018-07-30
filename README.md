@@ -14,11 +14,11 @@ and then
 npm start
 ```
 
-#Bugs
+# Bugs
 
 -System notification on Windows don't work (need to implement it in a different way on Windows)
 -First launch can be bugged (items may be not collapsible)
 
-#Todo
+# Todo
 
 -add notification, when site was down, and then go up
