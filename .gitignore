@@ -61,4 +61,4 @@ typings/
 .next
 
 #ignore downloaded htmls
-html/websites/*
+src/html/websites/*

@@ -103,7 +103,7 @@ function manageWebsiteContent(websiteItem) {
         if (response.status === 200) {
           if (`${websiteItem.status}` === 'new') {
             store.set(`${websiteItem.id}.newContent`, response.data);
-            saveWebsiteToHTML(websiteItem);
+            saveWebsiteToHTML(store.get(`${websiteItem.id}`));
             store.set(`${websiteItem.id}.status`, 'unchanged');
           } else {
             store.set(`${websiteItem.id}.newContent`, response.data);
