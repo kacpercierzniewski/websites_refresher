@@ -3,7 +3,11 @@ const axios = require('axios');
 const fs = require('fs');
 const openurl = require('openurl');
 const Store = require('electron-store');
+const path = require('path');
+const url = require('url');
 
+const Window = electron.remote.BrowserWindow;
+let addNewSiteWindow;
 const store = new Store();
 const { ipcRenderer, shell } = electron;
 const ul = document.querySelector('ul');
@@ -17,6 +21,7 @@ function checkForTimeVariable() {
     store.set('time', 60);
   } else {
     document.querySelector('#time').textContent = `Refreshing sites every ${store.get('time')} seconds`;
+    time = store.get('time');
   }
 }
 
@@ -36,6 +41,7 @@ function setDefaultLook(websiteItem) {
 function setTime(newTime) {
   store.set('time', newTime);
   document.querySelector('#time').textContent = `Refreshing sites every ${store.get('time')} seconds`;
+  time = store.get('time');
 }
 
 
@@ -82,11 +88,11 @@ function compareSites(oldSiteItem, newSite) {
     if (data.toString() === newSite.toString()) {
       console.log('sites the same');
 
-      if (oldSiteItem.status === 'changed' || oldSiteItem.status === 'error') {
+      if (oldSiteItem.status === 'changed' || oldSiteItem.status === 'down') {
         setDefaultLook(oldSiteItem);
         store.set(`${oldSiteItem.id}.status`, 'unchanged');
       }
-    } else if (oldSiteItem.status === 'unchanged' || oldSiteItem.status === 'error') {
+    } else if (oldSiteItem.status === 'unchanged' || oldSiteItem.status === 'down') {
       console.log('different sites');
       store.set(`${oldSiteItem.id}.status`, 'changed');
       showChanges(oldSiteItem);
@@ -114,7 +120,7 @@ function manageWebsiteContent(websiteItem) {
           }, store.get('time') * 1000);
         }
       }, (error) => {
-        store.set(`${websiteItem.id}.status`, 'error');
+        store.set(`${websiteItem.id}.status`, 'down');
 
         setTimeout(() => {
           manageWebsiteContent(store.get(`${websiteItem.id}`));
@@ -197,13 +203,36 @@ $(document).on('click', 'a[href^="http"]', function hrefRedirecting(event) {
   event.preventDefault();
   shell.openExternal(this.href);
 });
-
-
+function createAddNewSiteWindow() {
+  // create new window
+  addNewSiteWindow = new Window({
+    width: 300,
+    height: 250,
+    minWidth: 300,
+    minHeight: 250,
+    title: 'Add new Site',
+  });
+  // Load html file into window
+  addNewSiteWindow.loadURL(url.format({ // FANCY
+    pathname: path.join(__dirname, './addNewSiteWindow.html'),
+    protocol: 'file:',
+    slashes: true,
+  }));
+  // Garbage collection handle
+  addNewSiteWindow.on('close', () => {
+    addNewSiteWindow = null;
+  });
+}
+function addFunctionToButton() {
+  const button = document.querySelector('#addNewSiteButton');
+  button.onclick = createAddNewSiteWindow;
+}
 function initOperations() {
   checkIfFolderExists();
   addItemsOnStart();
   makeCollectionItemsCollapsible();
   checkForTimeVariable();
+  addFunctionToButton();
 }
 //  add new site
 ipcRenderer.on('website:add', (e, item) => {
@@ -221,14 +250,16 @@ ipcRenderer.on('website:add', (e, item) => {
 });
 // clear all sites
 ipcRenderer.on('item:clear', () => {
+  console.log(time);
   ul.innerHTML = '';
   ul.className = '';
-  store.delete();
+  store.clear();
   store.set('time', time);
 });
 // set time
 ipcRenderer.on('time:add', (e, item) => {
   setTime(item);
 });
+
 
 initOperations();

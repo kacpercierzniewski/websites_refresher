@@ -2,8 +2,6 @@
     position:fixed;
     top:50%;
     left:50%;
-
-
 }
 
 .collapsible-header:hover{
@@ -14,21 +12,15 @@
 @keyframes colorChange{
     from {background-color: #ffffff;}
     to {background-color: rgba(0, 227, 198, 0.28);}
-
 }
 
 body{
-
     -webkit-user-select: none;
 }
 .collapsible-body{
-
     background-color:  rgba(0, 227, 198, 0.10);
-
 }
 
 .errorBackground{
-
     background-color:  rgba(227, 0, 0, 0.2);
-
 }

@@ -1,21 +1,19 @@
 const electron = require('electron');
-
 const url = require('url');
-
 const path = require('path');
+const dns = require('dns');
+
 
 const {
   app, BrowserWindow, Menu, Tray, ipcMain,
 } = electron;
 let mainWindow;
 let addNewSiteWindow;
-let noConnectionWindow;
 let setTimeWindow;
-
+let noConnectionWindow;
 const iconpath = path.join(`${__dirname}/icon.png`);
 // process.env.NODE_ENV='production';
 
-const dns = require('dns');
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -35,54 +33,18 @@ function createMainWindow() {
   });
 }
 
-function createNoConnectionWindow() {
-  mainWindow.hide();
-  // create new window
-  noConnectionWindow = new BrowserWindow({
-    width: 300,
-    height: 180,
-    title: 'Connection Problem',
-  });
-  // Load html file into window
-  noConnectionWindow.loadURL(url.format({ // FANCY
-    pathname: path.join(__dirname, 'html/noConnectionWindow.html'),
-    protocol: 'file:',
-    slashes: true,
-  }));
-  // Garbage collection handle
-  noConnectionWindow.on('close', () => {
-    noConnectionWindow = null;
-  });
-}
-function createAddNewSiteWindow() {
-// create new window
-  addNewSiteWindow = new BrowserWindow({
-    width: 300,
-    height: 250,
-    title: 'Add new Site to check',
-  });
-  // Load html file into window
-  addNewSiteWindow.loadURL(url.format({ // FANCY
-    pathname: path.join(__dirname, 'html/addNewSiteWindow.html'),
-    protocol: 'file:',
-    slashes: true,
-  }));
-  // Garbage collection handle
-  addNewSiteWindow.on('close', () => {
-    addNewSiteWindow = null;
-  });
-}
-
 function createSetTimeWindow() {
-// create new window
+  // create new window
   setTimeWindow = new BrowserWindow({
     width: 300,
-    height: 200,
-    title: 'Set time between sites refresh',
+    height: 250,
+    minWidth: 300,
+    minHeight: 250,
+    title: 'Set time',
   });
   // Load html file into window
   setTimeWindow.loadURL(url.format({ // FANCY
-    pathname: path.join(__dirname, 'html/setTimeWindow.html'),
+    pathname: path.join(__dirname, './html/setTimeWindow.html'),
     protocol: 'file:',
     slashes: true,
   }));
@@ -91,7 +53,46 @@ function createSetTimeWindow() {
     setTimeWindow = null;
   });
 }
-
+function createAddNewSiteWindow() {
+  // create new window
+  addNewSiteWindow = new BrowserWindow({
+    width: 300,
+    height: 250,
+    minWidth: 300,
+    minHeight: 250,
+    title: 'Add new Site',
+  });
+  // Load html file into window
+  addNewSiteWindow.loadURL(url.format({ // FANCY
+    pathname: path.join(__dirname, './html/addNewSiteWindow.html'),
+    protocol: 'file:',
+    slashes: true,
+  }));
+  // Garbage collection handle
+  addNewSiteWindow.on('close', () => {
+    addNewSiteWindow = null;
+  });
+}
+function createNoConnectionWindow() {
+  // create new window
+  noConnectionWindow = new BrowserWindow({
+    width: 300,
+    height: 180,
+    minWidth: 300,
+    minHeight: 180,
+    title: 'Connection Problem',
+  });
+  // Load html file into window
+  noConnectionWindow.loadURL(url.format({ // FANCY
+    pathname: path.join(__dirname, './html/noConnectionWindow.html'),
+    protocol: 'file:',
+    slashes: true,
+  }));
+  // Garbage collection handle
+  noConnectionWindow.on('close', () => {
+    noConnectionWindow = null;
+  });
+}
 const mainMenuTemplate = [
   {
     label: 'Options',
