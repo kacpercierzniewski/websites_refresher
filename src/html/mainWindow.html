@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+            
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="../../node_modules/materialize-css/dist/css/materialize.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-    <script type='text/javascript' src="../../node_modules/materialize-css/dist/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
 
     <title>Websites Refresher</title>
 </head>
@@ -29,7 +30,10 @@
 
 </div>
 <script type='text/javascript' src="../js/mainWindow.js"></script>
-
+<script>
+  const collapsible = document.querySelector('.collapsible');
+  M.Collapsible.init(collapsible, {});
+</script>
 </body>
 
 </html>

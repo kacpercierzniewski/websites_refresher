@@ -5,11 +5,13 @@ const openurl = require('openurl');
 const Store = require('electron-store');
 const path = require('path');
 const url = require('url');
+const Console = require('console');
 
 const Window = electron.remote.BrowserWindow;
 let addNewSiteWindow;
 const store = new Store();
 const { ipcRenderer, shell } = electron;
+
 const ul = document.querySelector('ul');
 const dir = `${__dirname}/websites/`;
 let time;
@@ -86,14 +88,14 @@ function compareSites(oldSiteItem, newSite) {
       return err;
     }
     if (data.toString() === newSite.toString()) {
-      console.log('sites the same');
+      Console.log('sites the same');
 
       if (oldSiteItem.status === 'changed' || oldSiteItem.status === 'down') {
         setDefaultLook(oldSiteItem);
         store.set(`${oldSiteItem.id}.status`, 'unchanged');
       }
     } else if (oldSiteItem.status === 'unchanged' || oldSiteItem.status === 'down') {
-      console.log('different sites');
+      Console.log('different sites');
       store.set(`${oldSiteItem.id}.status`, 'changed');
       showChanges(oldSiteItem);
     }
@@ -129,11 +131,6 @@ function manageWebsiteContent(websiteItem) {
         return error;
       });
   }
-}
-
-function makeCollectionItemsCollapsible() {
-  // Manually make all DOM with .collapsible collapsible
-  $('.collapsible').collapsible();
 }
 
 
@@ -198,11 +195,6 @@ function addItemsOnStart() {
   });
 }
 
-
-$(document).on('click', 'a[href^="http"]', function hrefRedirecting(event) {
-  event.preventDefault();
-  shell.openExternal(this.href);
-});
 function createAddNewSiteWindow() {
   // create new window
   addNewSiteWindow = new Window({
@@ -230,7 +222,6 @@ function addFunctionToButton() {
 function initOperations() {
   checkIfFolderExists();
   addItemsOnStart();
-  makeCollectionItemsCollapsible();
   checkForTimeVariable();
   addFunctionToButton();
 }
@@ -250,7 +241,6 @@ ipcRenderer.on('website:add', (e, item) => {
 });
 // clear all sites
 ipcRenderer.on('item:clear', () => {
-  console.log(time);
   ul.innerHTML = '';
   ul.className = '';
   store.clear();
@@ -261,5 +251,12 @@ ipcRenderer.on('time:add', (e, item) => {
   setTime(item);
 });
 
+// Open all links in os browser
 
+document.addEventListener('click', (event) => {
+  if (event.target.tagName === 'A' && event.target.href.startsWith('http')) {
+    event.preventDefault();
+    shell.openExternal(event.target.href);
+  }
+});
 initOperations();
